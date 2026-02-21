@@ -3,37 +3,42 @@ import java.util.*;
 public class CafeteriaSystem {
     private final Map<String, MenuItem> menu = new LinkedHashMap<>();
     private final FileStore store = new FileStore();
+    private final TaxCalculator taxCalculator;
+    private final DiscountCalculator discountCalculator;
+    private final InvoiceFormatter invoiceFormatter = new InvoiceFormatter();
     private int invoiceSeq = 1000;
 
-    public void addToMenu(MenuItem i) { menu.put(i.id, i); }
+    public CafeteriaSystem(TaxCalculator taxCalculator, DiscountCalculator discountCalculator) {
+        this.taxCalculator = taxCalculator;
+        this.discountCalculator = discountCalculator;
+    }
 
-    // Intentionally SRP-violating: menu mgmt + tax + discount + format + persistence.
+    public void addToMenu(MenuItem i) {
+        menu.put(i.id, i);
+    }
+
     public void checkout(String customerType, List<OrderLine> lines) {
         String invId = "INV-" + (++invoiceSeq);
-        StringBuilder out = new StringBuilder();
-        out.append("Invoice# ").append(invId).append("\n");
-
+        List<InvoiceLine> invoiceLines = new ArrayList<>();
         double subtotal = 0.0;
+
         for (OrderLine l : lines) {
             MenuItem item = menu.get(l.itemId);
             double lineTotal = item.price * l.qty;
             subtotal += lineTotal;
-            out.append(String.format("- %s x%d = %.2f\n", item.name, l.qty, lineTotal));
+            invoiceLines.add(new InvoiceLine(item.name, l.qty, lineTotal));
         }
 
-        double taxPct = TaxRules.taxPercent(customerType);
+        double taxPct = taxCalculator.calculateTaxPercent(customerType);
         double tax = subtotal * (taxPct / 100.0);
 
-        double discount = DiscountRules.discountAmount(customerType, subtotal, lines.size());
+        double discount = discountCalculator.calculateDiscount(customerType, subtotal, lines.size());
 
         double total = subtotal + tax - discount;
 
-        out.append(String.format("Subtotal: %.2f\n", subtotal));
-        out.append(String.format("Tax(%.0f%%): %.2f\n", taxPct, tax));
-        out.append(String.format("Discount: -%.2f\n", discount));
-        out.append(String.format("TOTAL: %.2f\n", total));
+        Invoice invoice = new Invoice(invId, invoiceLines, subtotal, taxPct, tax, discount, total);
 
-        String printable = InvoiceFormatter.identityFormat(out.toString());
+        String printable = invoiceFormatter.format(invoice);
         System.out.print(printable);
 
         store.save(invId, printable);
