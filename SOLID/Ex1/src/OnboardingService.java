@@ -26,9 +26,7 @@ public class OnboardingService {
         List<String> errors = iv.validate(name, email, phone, program);
 
         if (!errors.isEmpty()) {
-            System.out.println("ERROR: cannot register");
-            for (String e : errors)
-                System.out.println("- " + e);
+            printer.printErrors(null);
             return;
         }
 
