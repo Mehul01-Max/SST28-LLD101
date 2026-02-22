@@ -5,12 +5,14 @@ public class CafeteriaSystem {
     private final FileStore store = new FileStore();
     private final TaxCalculator taxCalculator;
     private final DiscountCalculator discountCalculator;
+    private final PricingCalculator pricingCalculator;
     private final InvoiceFormatter invoiceFormatter = new InvoiceFormatter();
     private int invoiceSeq = 1000;
 
     public CafeteriaSystem(TaxCalculator taxCalculator, DiscountCalculator discountCalculator) {
         this.taxCalculator = taxCalculator;
         this.discountCalculator = discountCalculator;
+        this.pricingCalculator = new PricingCalculator(menu);
     }
 
     public void addToMenu(MenuItem i) {
@@ -20,14 +22,7 @@ public class CafeteriaSystem {
     public void checkout(String customerType, List<OrderLine> lines) {
         String invId = "INV-" + (++invoiceSeq);
         List<InvoiceLine> invoiceLines = new ArrayList<>();
-        double subtotal = 0.0;
-
-        for (OrderLine l : lines) {
-            MenuItem item = menu.get(l.itemId);
-            double lineTotal = item.price * l.qty;
-            subtotal += lineTotal;
-            invoiceLines.add(new InvoiceLine(item.name, l.qty, lineTotal));
-        }
+        double subtotal = pricingCalculator.calculateSubtotal(lines, invoiceLines);
 
         double taxPct = taxCalculator.calculateTaxPercent(customerType);
         double tax = subtotal * (taxPct / 100.0);
