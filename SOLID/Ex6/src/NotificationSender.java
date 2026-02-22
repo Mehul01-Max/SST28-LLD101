@@ -9,13 +9,13 @@ public abstract class NotificationSender {
 
     public abstract boolean validate(Notification n);
 
-    public abstract String validationError(Notification n);
+    public abstract String validationError();
 
     protected abstract void doSend(Notification n);
 
     public void send(Notification n) {
         if (!validate(n)) {
-            System.out.println(channel() + " ERROR: " + validationError(n));
+            System.out.println(channel() + " ERROR: " + validationError());
             audit.add(channel() + " failed");
             return;
         }

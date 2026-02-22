@@ -14,7 +14,7 @@ public class SmsSender extends NotificationSender {
     }
 
     @Override
-    public String validationError(Notification n) {
+    public String validationError() {
         return "phone is null";
     }
 

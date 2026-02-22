@@ -14,7 +14,7 @@ public class WhatsAppSender extends NotificationSender {
     }
 
     @Override
-    public String validationError(Notification n) {
+    public String validationError() {
         return "phone must start with + and country code";
     }
 

@@ -14,7 +14,7 @@ public class EmailSender extends NotificationSender {
     }
 
     @Override
-    public String validationError(Notification n) {
+    public String validationError() {
         return "email is null";
     }
 
