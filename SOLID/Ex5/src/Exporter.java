@@ -1,19 +1,23 @@
 public abstract class Exporter {
     // implied "contract" but not enforced (smell)
-    public ExportResult export(ExportRequest req) {
+    public String export(ExportRequest req) {
         if (req == null) {
-            throw new IllegalArgumentException("req cannot be null");
+            return "ERROR: req cannot be null";
         }
         if (req.title == null) {
-            throw new IllegalArgumentException("req.title cannot be null");
+            return "ERROR: req.title cannot be null";
+
         }
-        validation(req);
+        String val = validation(req);
+        if (val != null) {
+            return "ERROR: " + val;
+        }
         ExportResult data = encode(req);
 
-        return data;
+        return "OK bytes=" + data.bytes.length;
     }
 
-    abstract void validation(ExportRequest req);
+    abstract String validation(ExportRequest req);
 
     abstract ExportResult encode(ExportRequest req);
 

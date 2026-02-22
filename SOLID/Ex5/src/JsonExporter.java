@@ -15,7 +15,7 @@ public class JsonExporter extends Exporter {
     }
 
     @Override
-    void validation(ExportRequest req) {
-        return;
+    String validation(ExportRequest req) {
+        return null;
     }
 }
