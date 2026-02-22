@@ -2,10 +2,10 @@ import java.nio.charset.StandardCharsets;
 
 public class JsonExporter extends Exporter {
     @Override
-    public byte[] encode(ExportRequest req) {
+    public ExportResult encode(ExportRequest req) {
         // inconsistent handling (surprise)
         String json = "{\"title\":\"" + escape(req.title) + "\",\"body\":\"" + escape(req.body) + "\"}";
-        return json.getBytes(StandardCharsets.UTF_8);
+        return new ExportResult("text/json", json.getBytes(StandardCharsets.UTF_8));
     }
 
     private String escape(String s) {
@@ -15,7 +15,7 @@ public class JsonExporter extends Exporter {
     }
 
     @Override
-    ExportResult postProcess(ExportRequest req, byte[] data) {
-        return new ExportResult("text/json", data);
+    void validation(ExportRequest req) {
+        return;
     }
 }

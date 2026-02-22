@@ -7,12 +7,14 @@ public abstract class Exporter {
         if (req.title == null) {
             throw new IllegalArgumentException("req.title cannot be null");
         }
-        byte[] data = encode(req);
+        validation(req);
+        ExportResult data = encode(req);
 
-        return postProcess(req, data);
+        return data;
     }
 
-    abstract byte[] encode(ExportRequest req);
+    abstract void validation(ExportRequest req);
 
-    abstract ExportResult postProcess(ExportRequest req, byte[] data);
+    abstract ExportResult encode(ExportRequest req);
+
 }
