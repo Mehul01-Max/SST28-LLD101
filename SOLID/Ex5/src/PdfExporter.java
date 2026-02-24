@@ -9,7 +9,7 @@ public class PdfExporter extends Exporter {
     }
 
     @Override
-    String validation(ExportRequest req) {
+    protected String validation(ExportRequest req) {
         if (req.body != null && req.body.length() > 20) {
             return "PDF cannot handle content > 20 chars";
         }

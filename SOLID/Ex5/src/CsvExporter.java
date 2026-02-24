@@ -10,7 +10,7 @@ public class CsvExporter extends Exporter {
     }
 
     @Override
-    String validation(ExportRequest req) {
+    protected String validation(ExportRequest req) {
         return null;
     }
 

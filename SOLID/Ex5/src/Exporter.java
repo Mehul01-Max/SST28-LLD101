@@ -17,8 +17,8 @@ public abstract class Exporter {
         return "OK bytes=" + data.bytes.length;
     }
 
-    abstract String validation(ExportRequest req);
+    protected abstract String validation(ExportRequest req);
 
-    abstract ExportResult encode(ExportRequest req);
+    protected abstract ExportResult encode(ExportRequest req);
 
 }
