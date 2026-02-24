@@ -8,6 +8,9 @@ public abstract class Exporter {
             return "ERROR: req.title cannot be null";
 
         }
+        if (req.body == null) {
+            return "ERROR: req.body cannot be null";
+        }
         String val = validation(req);
         if (val != null) {
             return "ERROR: " + val;
