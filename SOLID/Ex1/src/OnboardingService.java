@@ -26,7 +26,7 @@ public class OnboardingService {
         List<String> errors = iv.validate(name, email, phone, program);
 
         if (!errors.isEmpty()) {
-            printer.printErrors(null);
+            printer.printErrors(errors);
             return;
         }
 
