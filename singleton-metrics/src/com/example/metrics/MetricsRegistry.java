@@ -5,7 +5,6 @@ import java.io.Serializable;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.SynchronousQueue;
 
 /**
  * INTENTION: Global metrics registry (should be a Singleton).
